@@ -1,13 +1,12 @@
 package com.encore.basic.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
-@Getter
-@AllArgsConstructor
-public class Member {
+@Data
+public class MemberResponseDTO {
     private int id;
     private String name;
     private String email;
