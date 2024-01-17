@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.NoSuchElementException;
+
 // 회원가입(글쓰기), 회원목록조회(글 목록 조회) + 회원상세조회(글 상세 조회)
 // + 회원수정 + 회원삭제
 @Controller
@@ -48,13 +51,42 @@ public class MemberController {
     @PostMapping("members/create")
     public String PostRegister(MemberRequestDTO memberRequestDTO){
         memberService.memberCreate(memberRequestDTO);
-        // url 리다이렉트
         return "redirect:/members";
+        // 트랜잭션 및 예외처리 테스트
+//        try{
+//            memberService.memberCreate(memberRequestDTO);
+//            // url 리다이렉트
+//            return "redirect:/members";
+//        } catch(IllegalArgumentException e){
+//            return "member/404-error-page";
+//        }
     }
 
     @GetMapping("members/find")
     public String getFind(@RequestParam(value = "id")int id, Model model){
-        model.addAttribute("findData",  memberService.findMemberById(id));
-        return "member/member-find";
+        try{
+            MemberResponseDTO memberResponseDTO = memberService.findById(id);
+            model.addAttribute("findData",  memberResponseDTO);
+            return "member/member-find";
+        } catch (EntityNotFoundException e){
+            return "member/404-error-page";
+        }
+    }
+
+    @GetMapping("members/delete")
+    public String deleteMember(@RequestParam(value = "id")int id){
+        try{
+            MemberResponseDTO memberResponseDTO = memberService.findById(id);
+            memberService.delete(memberResponseDTO);
+            return "redirect:/members";
+        }catch(EntityNotFoundException e){
+            return "member/404-error-page";
+        }
+    }
+
+    @PostMapping("members/update")
+    public String modifyMember(MemberRequestDTO memberRequestDTO){
+        memberService.update(memberRequestDTO);
+        return "redirect:/members/find?id=" + memberRequestDTO.getId();
     }
 }
