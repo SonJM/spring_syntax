@@ -3,7 +3,6 @@ package com.encore.basic.service;
 import com.encore.basic.domain.Member;
 import com.encore.basic.domain.MemberRequestDTO;
 import com.encore.basic.domain.MemberResponseDTO;
-import com.encore.basic.repository.JpaMemberRepository;
 import com.encore.basic.repository.MemberRepository;
 import com.encore.basic.repository.SpringDataJpaMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
